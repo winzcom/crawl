@@ -4,6 +4,8 @@ const parser = crawl(`
 <html>
   <head>
     <title>Div Align Attribbute</title>
+    <link rel="hello"/>
+    <script id="adp2" data-cfasync="false">(function(w, d) {var s = d.createElement('script'); s.src = '//delivery.adrecover.com/18107/adRecover.js'; s.type = 'text/javascript'; s.async = true; (d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild(s); })(window, document);</script>
   </head>
   <body>
     <div align="left">
@@ -19,7 +21,7 @@ const parser = crawl(`
       labore et dolore magna aliqua.
     </div>
     <div align="justify">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+      Lorem ipsum dolor <b>sit amet<b/>, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
       labore et dolore magna aliqua.
     </div>
     <form>
@@ -44,6 +46,7 @@ const parser = crawl(`
 </html>`)
 
 console.time('start')
-console.log({ parser: crawl.find('div')})
-console.log({ parser: crawl.findBy('"Options"', 'id')})
+//console.log({ parser: parser.children[0].children })
+console.log({ parser: crawl.find('script').children })
+console.log({ parser: crawl.findBy('hello', 'rel') })
 console.timeEnd('start')

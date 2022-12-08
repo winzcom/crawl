@@ -72,7 +72,7 @@ function crawl(html) {
             let cal = dfs(new_child.tag)
             if(cal && cal.tag !== '\n') {
                children_records[cal.tag || cal.end_tag] = true
-               new_child.children.push(cal) 
+               cal.end_tag != new_child.tag && new_child.children.push(cal) 
             }
             attributes && readAttributes(read_chars, new_child)
             attributes = false
@@ -83,15 +83,21 @@ function crawl(html) {
           read_chars = ''
           continue
         }
-        if(html[s] == '/' && open_close == '<' && !attributes) {
-          is_closing_tag = true
+        if(html[s] == '/' && open_close == '<') {
+          if(!attributes) {
+            is_closing_tag = true
+          } else if(html[s+1] == '>'){
+            readAttributes(read_chars, new_child)
+            s += 1
+            return new_child
+          }
           continue
         }
         if(html[s] == ' ') {
           if(is_new_line) {
             continue
           }
-          if(!closed && open_close == '<') {
+          if(!closed && open_close == '<' && !attributes) {
              // this means we need to read attributes
             new_child.tag = read_chars
             read_chars = ''
@@ -120,6 +126,9 @@ crawl.find = function (tag) {
             return next
         }
         const childs = next.children
+        if(!childs) {
+            continue
+        }
         for(let c of childs) {
             queue.push(c)
         }
@@ -138,6 +147,9 @@ crawl.findBy = function(val, by) {
             return next
         }
         const childs = next.children
+        if(!childs) {
+            continue
+        }
         for(let c of childs) {
             queue.push(c)
         }
